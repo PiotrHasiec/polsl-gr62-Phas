@@ -1,3 +1,4 @@
+/** @file */
 #include "Solver_Residuum.h"
 #include <algorithm>
 #include <iostream>
@@ -13,7 +14,7 @@ double Solver_Residuum::residuum(int& r, Matrix& a, Matrix& b)
 }
 bool Solver_Residuum::solv(Matrix A)
 {
-	if (norm1(A) || norm2(A) || norm3(A))
+	if (norm1(A) || norm2(A) || norm3(A))// jesli co najmniej jedna norma jest spelniona
 	{
 		const int n = A.size_y();
 		int max = 0;
@@ -39,7 +40,8 @@ bool Solver_Residuum::solv(Matrix A)
 			r[i][0] += A[i][n];
 		}
 			bool stop = 1;
-		for (int i = 0; stop; i++)
+			int i = 0;
+		for (i=0; stop; i++)
 		{
 			wyniki = x;
 			stop = max = 0;

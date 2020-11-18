@@ -1,8 +1,10 @@
+/** @file */
 #include "Matrix.h"
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
-
+#include <random>
+#include <ctime>
 Matrix::Matrix()
 {
 	m = 0;
@@ -19,7 +21,9 @@ Matrix::Matrix(int a, int b)
 	m = new double* [y];
 	for (int i = 0; i < y; i++)
 		m[i] = new double[x];
-
+	for (int i = 0; i < y; i++)
+		for (int j = 0; j < x; j++)
+			m[i][j] = 0;
 }
 Matrix::Matrix(Matrix& A)
 {
@@ -197,7 +201,7 @@ Matrix Matrix::operator*=(double a)
 	return *this;
 }
 
-void Matrix::change_x(int x1, int x2)
+void Matrix::swap_x(int x1, int x2)
 {
 
 	for (int i = 0; i < y; i++)
@@ -207,7 +211,7 @@ void Matrix::change_x(int x1, int x2)
 	}
 
 }
-void Matrix::change_y(int y1, int y2)
+void Matrix::swap_y(int y1, int y2)
 {
 
 	for (int i = 0; i < x; i++)
@@ -353,6 +357,18 @@ const void Matrix::print(int precision)
 		std::cout << std::endl;
 	}
 }
+const void Matrix::print_t(int precision)
+{
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			std::cout << std::fixed << std::setprecision(precision) << m[j][i] << ", ";
+
+		}
+		std::cout << std::endl;
+	}
+}
 const int Matrix::size_y()const
 {
 	return y;
@@ -401,4 +417,28 @@ std::ostream& operator<<(std::ostream& os, Matrix& A)
 	os<<"\n";
 	}
 	return os;
+}
+
+void gen_dane_wej(Matrix& A, bool zbiezny, int range)
+{
+	std::default_random_engine generator;
+	generator.seed(time(0));
+	std::uniform_int_distribution<int> distribution(1, range);
+	
+	for (int i = 0; i < A.y; i++)
+	{
+		double suma = 0;
+		for (int j = 0; j < A.y; j++)
+		{
+			 A.m[i][j] = distribution(generator);
+			 suma += A.m[i][j];
+			
+		}
+		A.m[i][A.y] = distribution(generator)* distribution(generator);
+		if (zbiezny)
+		{
+			if (A.m[i][i] < suma)
+				A.m[i][i] += suma;
+		}
+	}
 }
